@@ -1,8 +1,5 @@
 import re
-import base64
 from loguru import logger
-from io import BytesIO
-from PIL import Image
 from tr import run
 
 def load_img_and_run_ocr(img_pil):
@@ -22,7 +19,7 @@ def extract_menu(extract_info_non_fil):
     # filtering text from ocr
     extract_info = []
     for line in extract_info_non_fil:
-        if bool(re.search("[A-Za-z]", line[1][0])) or bool(re.search("[0-9]", line[1][0])):
+        if (len(line[1]) > 0) and (bool(re.search("[A-Za-z]", line[1][0])) or bool(re.search("[0-9]", line[1][0]))):
             extract_info.append(line)
 
     # category:{dishname : price} in dict form
@@ -58,9 +55,7 @@ def convert_to_required_format(menu):
     
     return formatted_menu
 
-def run_on_single_image(img_base64):
-    logger.info("Converting Base64 to PIL image")
-    img = Image.open(BytesIO(base64.b64decode(img_base64)))
+def run_on_single_image(img):
     logger.info("Running OCR on the iamge")
     extract_info = load_img_and_run_ocr(img)
     logger.info("Running extraction logic on OCR results")
