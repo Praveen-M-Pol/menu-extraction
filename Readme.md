@@ -1,6 +1,7 @@
-Steps for Installation
+# Steps for Installation
+
 - Clone the project using `git clone https://github.com/Akash-Cheerla/Menu-Extraction`
--  setup the environemnt using `python -m venv .env`
+- setup the environemnt using `python -m venv .env`
 - Activate the environment using `source .env/bin/activate`
 - Before installing other required libraries, you should first install the OCR. The OCR is taken from [here](https://github.com/myhub/tr)
 - After the visiting the above url, you can see that you can install the library using `sudo pip install git+https://github.com/myhub/tr.git@master`. If some problem remove `sudo` and try.

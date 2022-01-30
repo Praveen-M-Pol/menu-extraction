@@ -29,5 +29,5 @@ def menu_extraction_upload_image(image: UploadFile = File(...)):
     logger.info("Received image file from the image upload endpoint")
     img = Image.open(image.file)
     menu = run_on_single_image(img)
-    logger.debug("Sending Response = {}".format(menu))
+    logger.success("Sending Response = {}".format(menu))
     return menu

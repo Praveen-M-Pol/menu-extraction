@@ -1,0 +1,13 @@
+1) git clone https://github.com/myhub/tr.git
+2) python3 -m venv env
+3) source env/bin/activate
+4) pip3 install --upgrade pip
+5) check pip3 --version
+6) cd tr/
+7) python3 setup.py install
+8) check pip3 list to see if tr ran
+9) pip3 install uvicorn[standard]
+10) pip3 install fastapi
+11) pip3 install loguru
+12) pip3 install Pillow
+13) pip3 install python-multipart
