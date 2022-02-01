@@ -42,10 +42,25 @@ def filter_text(extract_info_non_fil):
     return extract_info
 
 
-def extract_menu(extract_info_non_fil):
+def convert_to_required_format(menu):
+    """
+        Function for converting to required format.
+    """
+    logger.info("Converting it to required format")
+    formatted_menu = {'menus':[]}
+    for category in menu:
+        formatted_menu['category'] = category
+        for name, price in menu[category].items():
+            formatted_menu['menus'].append({'name':name, 'price':price})
+    
+    return formatted_menu
+
+
+def extract_simple_menu(extract_info_non_fil):
     """
         function which contains the core logic
         to extract information from ocr output
+        for simple menu that is name and price.
     """
     logger.info("Running the core logic on filtered words = {}".format(extract_info_non_fil))
     # filtering text from ocr
@@ -80,28 +95,40 @@ def extract_menu(extract_info_non_fil):
     return menu
 
 
-def convert_to_required_format(menu):
+def extract_description_menu(extract_info_non_fil):
     """
-        Function for converting to required format.
+        function which contains the core logic
+        to extract information from ocr output
+        for description menu that is name, price and
+        description.
     """
-    logger.info("Converting it to required format")
-    formatted_menu = {'menus':[]}
-    for category in menu:
-        formatted_menu['category'] = category
-        for name, price in menu[category].items():
-            formatted_menu['menus'].append({'name':name, 'price':price})
-    
-    return formatted_menu
+    logger.info("Running the core logic on filtered words = {}".format(extract_info_non_fil))
+    # filtering text from ocr
+    extract_info = []
+    return extract_info
 
 
-def run_on_single_image(img):
+def run_for_simple_menu(img):
     try:
         extract_info = load_img_and_run_ocr(img)
         extract_info = filter_text(extract_info)
-        menu = extract_menu(extract_info)
+        menu = extract_simple_menu(extract_info)
         menu = convert_to_required_format(menu)
     except Exception as ex:
-        logger.exception("Exception = {}".format(str(ex)))
+        logger.exception("Exception in simple menu = {}".format(str(ex)))
+        raise HTTPException(500, detail=str(ex))
+
+    return menu
+
+
+def run_for_description_menu(img):
+    try:
+        extract_info = load_img_and_run_ocr(img)
+        extract_info = filter_text(extract_info)
+        menu = extract_description_menu(extract_info)
+        menu = convert_to_required_format(menu)
+    except Exception as ex:
+        logger.exception("Exception in description menu= {}".format(str(ex)))
         raise HTTPException(500, detail=str(ex))
 
     return menu
