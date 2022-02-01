@@ -7,7 +7,7 @@ from fastapi import FastAPI, File, UploadFile
 
 
 from core import run_for_simple_menu, run_for_description_menu
-from models import Request
+from models import Request, SimpleMenuResponseModel, DescriptionMenuResponseModel
 
 
 tags_metadata = [
@@ -31,7 +31,7 @@ app = FastAPI(
 )
 
 
-@app.post("/simplemenu/base64", tags=["Simple Menu"])
+@app.post("/simplemenu/base64", tags=["Simple Menu"], response_model=SimpleMenuResponseModel)
 def simple_menu_extraction_base64(payload: Request):
     logger.info("Received payload from the base64 endpoint")
     img_base64 = payload.base64
@@ -42,7 +42,7 @@ def simple_menu_extraction_base64(payload: Request):
     return menu
 
 
-@app.post("/simplemenu/imageupload", tags=["Simple Menu"])
+@app.post("/simplemenu/imageupload", tags=["Simple Menu"], response_model=SimpleMenuResponseModel)
 def simple_menu_extraction_upload_image(image: UploadFile = File(...)):
     logger.info("Received image file from the image upload endpoint")
     img = Image.open(image.file)
@@ -51,7 +51,7 @@ def simple_menu_extraction_upload_image(image: UploadFile = File(...)):
     return menu
 
 
-@app.post("/descriptionmenu/base64", tags=["Description Menu"])
+@app.post("/descriptionmenu/base64", tags=["Description Menu"], response_model=DescriptionMenuResponseModel)
 def description_menu_extraction_base64(payload: Request):
     logger.info("Received payload from the base64 endpoint")
     img_base64 = payload.base64
@@ -62,7 +62,7 @@ def description_menu_extraction_base64(payload: Request):
     return menu
 
 
-@app.post("/descriptionmenu/imageupload", tags=["Description Menu"])
+@app.post("/descriptionmenu/imageupload", tags=["Description Menu"], response_model=DescriptionMenuResponseModel)
 def description_menu_extraction_upload_image(image: UploadFile = File(...)):
     logger.info("Received image file from the image upload endpoint")
     img = Image.open(image.file)

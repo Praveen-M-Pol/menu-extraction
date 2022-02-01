@@ -47,12 +47,11 @@ def convert_to_required_format(menu):
         Function for converting to required format.
     """
     logger.info("Converting it to required format")
-    formatted_menu = {'menus':[]}
+    formatted_menu = {'menus': []}
     for category in menu:
-        formatted_menu['category'] = category
-        for name, price in menu[category].items():
-            formatted_menu['menus'].append({'name':name, 'price':price})
-    
+        for item in menu[category]:
+            formatted_menu['menus'].append(item)
+
     return formatted_menu
 
 
@@ -62,29 +61,36 @@ def extract_simple_menu(extract_info_non_fil):
         to extract information from ocr output
         for simple menu that is name and price.
     """
-    logger.info("Running the core logic on filtered words = {}".format(extract_info_non_fil))
     # filtering text from ocr
     extract_info = []
     for line in extract_info_non_fil:
         if (len(line[1]) > 0) and (bool(re.search("[A-Za-z]", line[1][0])) or bool(re.search("[0-9]", line[1][0]))):
             extract_info.append(line)
 
-    # category:{dishname : price} in dict form
+    # text from ocr
+    text = [line[1] for line in extract_info]
+    logger.info("Running the core logic on filtered words = {}".format(text))
+
+    # category: {dishname: price} in dict form
     menu = {}
     category_idx = -1
     idx = 0
-    while(idx < len(extract_info) - 1):
+    while(idx < len(text) - 1):
         # so current starts with character
-        if re.search("[A-Za-z]", extract_info[idx][1][0]):
+        if re.search("[A-Za-z]", text[idx][0]):
             # now check if next one also starts with character
-            if re.search("[A-Za-z]", extract_info[idx+1][1][0]):
+            if re.search("[A-Za-z]", text[idx+1][0]):
                 category_idx = idx
-                # init with empty dict
-                menu[extract_info[category_idx][1]] = {}
+                # init with empty list
+                menu[text[category_idx]] = []
                 idx = idx + 1
             # now check if next one starts with number
-            elif re.search("[0-9]", extract_info[idx+1][1][0]):
-                menu[extract_info[category_idx][1]][extract_info[idx][1]] = extract_info[idx+1][1]
+            elif re.search("[0-9]", text[idx+1][0]):
+                item = {
+                    "name": text[idx],
+                    "price": text[idx + 1]
+                }
+                menu[text[category_idx]].append(item)
                 idx = idx + 2
             else:
                 idx = idx + 1
@@ -102,10 +108,42 @@ def extract_description_menu(extract_info_non_fil):
         for description menu that is name, price and
         description.
     """
-    logger.info("Running the core logic on filtered words = {}".format(extract_info_non_fil))
     # filtering text from ocr
     extract_info = []
-    return extract_info
+    for line in extract_info_non_fil:
+        if (len(line[1]) > 0) and (bool(re.search("[A-Za-z]", line[1][0])) or bool(re.search("[0-9]", line[1][0]))):
+            extract_info.append(line)
+
+    # text from ocr
+    text = [line[1] for line in extract_info]
+    logger.info("Running the core logic on filtered words = {}".format(text))
+
+    # category: {dishname: price} in dict form
+    menu = {}
+    category_idx = -1
+    idx = 0
+    while(idx < len(text) - 2):
+        # so current starts with character
+        if re.search("[A-Za-z]", text[idx][0]):
+            # now check if next one also starts with character
+            if re.search("[A-Za-z]", text[idx+1][0]):
+                category_idx = idx
+                # init with empty list
+                menu[text[category_idx]] = []
+                idx = idx + 1
+            # now check if next one starts with number
+            elif re.search("[0-9]", text[idx+1][0]):
+                item = {
+                    "name": text[idx],
+                    "price": text[idx + 1],
+                    "description": text[idx + 2]
+                }
+                menu[text[category_idx]].append(item)
+                idx = idx + 3
+            else:
+                idx = idx + 1
+
+    return menu
 
 
 def run_for_simple_menu(img):
