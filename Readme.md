@@ -8,3 +8,5 @@
 - After that you have install other requirements that is by using `pip install -r requirements.txt`
 - Now you can run the API using `python serve.py`. The API will be hosted at `localhost:9000/docs`.
 - Two endpoints base64 and image upload are provided. For base64, you have give the base64 of the image to the run the results and for image upload, simple upload the image.
+
+Also for the reference, I have added the [steps.txt](steps.txt) file where I have mentioned the steps I performed while setting up the API.
