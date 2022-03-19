@@ -25,7 +25,6 @@ tags_metadata = [
 
 dishes = pd.read_csv("dish/dishes.csv")
 dishes["name"] = dishes["name"].str.lower()
-dishes["course"] = dishes["course"].str.lower()
 app = FastAPI(
     title = "Extracting Menu", 
     description="API for extracting dish name and price from image of menu",

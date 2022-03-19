@@ -183,6 +183,6 @@ def put_items_into_categories(menu, dishes):
         if len(dish) == 0:
             item["category"] = "other"
         else:
-            item["category"] = dish["course"]
+            item["category"] = dish["course"].tolist()[0]
 
     return menu
