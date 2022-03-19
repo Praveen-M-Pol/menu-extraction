@@ -146,12 +146,13 @@ def extract_description_menu(extract_info_non_fil):
     return menu
 
 
-def run_for_simple_menu(img):
+def run_for_simple_menu(img, dishes):
     try:
         extract_info = load_img_and_run_ocr(img)
         extract_info = filter_text(extract_info)
         menu = extract_simple_menu(extract_info)
         menu = convert_to_required_format(menu)
+        menu = put_items_into_categories(menu, dishes)
     except Exception as ex:
         logger.exception("Exception in simple menu = {}".format(str(ex)))
         raise HTTPException(500, detail=str(ex))
@@ -159,14 +160,29 @@ def run_for_simple_menu(img):
     return menu
 
 
-def run_for_description_menu(img):
+def run_for_description_menu(img, dishes):
     try:
         extract_info = load_img_and_run_ocr(img)
         extract_info = filter_text(extract_info)
         menu = extract_description_menu(extract_info)
         menu = convert_to_required_format(menu)
+        menu = put_items_into_categories(menu, dishes)
     except Exception as ex:
         logger.exception("Exception in description menu= {}".format(str(ex)))
         raise HTTPException(500, detail=str(ex))
+
+    return menu
+
+
+def put_items_into_categories(menu, dishes):
+    # takes input from output of convert_to_required_format
+    # categories
+    for item in menu["menus"]:
+        dish = dishes.loc[dishes["name"] == item["name"].lower()]
+        # update item, it will be done in menu I guess
+        if len(dish) == 0:
+            item["category"] = "other"
+        else:
+            item["category"] = dish["course"]
 
     return menu
