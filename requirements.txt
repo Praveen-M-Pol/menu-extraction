@@ -1,9 +1,11 @@
+python==3.7
 aiocontextvars==0.2.2
 anyio==3.5.0
 asgiref==3.4.1
 click==8.0.3
 contextlib2==21.6.0
 contextvars==2.4
+dataclasses==0.8
 fastapi==0.73.0
 h11==0.13.0
 httptools==0.3.0
